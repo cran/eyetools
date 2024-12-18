@@ -6,15 +6,8 @@ fig.path = "../man/figures/")
 knitr::opts_chunk$set(warning = FALSE) # suppress warnings for easier reading
 
 
-## ---- eval=FALSE, include=FALSE-----------------------------------------------
-#  
-#  if (!require(devtools)) {
-#    install.packages("devtools")
-#    library(devtools)
-#  }
-#  
-#  install_github("tombeesley/eyetools")
-#  
+## ---- eval=FALSE--------------------------------------------------------------
+#  install.packages('eyetools')
 
 ## -----------------------------------------------------------------------------
 
@@ -137,15 +130,15 @@ comparison <- compare_algorithms(data_118,
 AOI_areas <- data.frame(matrix(nrow = 3, ncol = 4))
 colnames(AOI_areas) <- c("x", "y", "width_radius", "height")
 
-AOI_areas[1,] <- c(410, 840, 400, 300) # Left cue
-AOI_areas[2,] <- c(1510, 840, 400, 300) # Right cue
+AOI_areas[1,] <- c(460, 840, 400, 300) # Left cue
+AOI_areas[2,] <- c(1460, 840, 400, 300) # Right cue
 AOI_areas[3,] <- c(960, 270, 300, 500) # outcomes
 
 AOI_areas
 
 ## -----------------------------------------------------------------------------
 
-data_AOI_time <- AOI_time(data = data_fixations_disp, # just participant 118, otherwise incorporate into lapply() as above
+data_AOI_time <- AOI_time(data = data_fixations_disp, 
                           data_type = "fix",
                           AOIs = AOI_areas,
                           participant_ID = "pNum")
@@ -153,20 +146,32 @@ data_AOI_time <- AOI_time(data = data_fixations_disp, # just participant 118, ot
 head(data_AOI_time)
 
 ## -----------------------------------------------------------------------------
-AOI_time(data = data_fixations_disp, # just participant 118, otherwise incorporate into lapply() as above
+AOI_time(data = data_fixations_disp,
                           data_type = "fix",
                           AOIs = AOI_areas,
                           participant_ID = "pNum", 
-                          as_prop = T, 
+                          as_prop = TRUE, 
                           trial_time = HCL_behavioural$RT) #vector of trial times
+
+## -----------------------------------------------------------------------------
+AOI_time(data = data_118, data_type = "raw", AOIs = AOI_areas,
+         participant_ID = "pNum")
+
+## -----------------------------------------------------------------------------
+
+AOI_time_binned(data = data_118,
+         AOIs = AOI_areas,
+         participant_ID = "pNum", 
+         bin_length = 100,
+         max_time = 2000,
+         as_prop = TRUE)
+
 
 ## -----------------------------------------------------------------------------
 
 data_AOI_sequence <- AOI_seq(data_fixations_disp,
                              AOI_areas,         
                              AOI_names = NULL,         
-                             sample_rate = NULL,         
-                             long = TRUE,
                              participant_ID = "pNum")   
 
 head(data_AOI_sequence)
@@ -180,11 +185,11 @@ plot_seq(data_118, trial_number = 1)
 
 plot_seq(data_118, trial_number = 1, bg_image = "data/HCL_sample_image.jpg") # add background image
 
-plot_seq(data_118, trial_number = 1, AOIs = HCL_AOIs) # add AOIs
+plot_seq(data_118, trial_number = 1, AOIs = AOI_areas) # add AOIs
 
 
 ## -----------------------------------------------------------------------------
-plot_seq(data_118, trial_number = 1, AOIs = HCL_AOIs, bin_time = 1000)
+plot_seq(data_118, trial_number = 1, AOIs = AOI_areas, bin_time = 1000)
 
 
 ## -----------------------------------------------------------------------------
@@ -200,5 +205,16 @@ plot_spatial(raw_data = data_118,
              fix_data = fixation_dispersion(data_118),
              sac_data = saccade_VTI(data_118),
              trial_number = 6)
+
+
+## -----------------------------------------------------------------------------
+#standard plot with absolute time
+plot_AOI_growth(data = data_118, AOIs = AOI_areas, type = "abs", trial_number = 1)
+
+#standard plot with proportional time
+plot_AOI_growth(data = data_118, AOIs = AOI_areas, type = "prop", trial_number = 1)
+
+#only keep predictive and non-predictive cues rather than the target AOI
+plot_AOI_growth(data = data_118, AOIs = AOI_areas, type = "prop", AOI_names = c("Predictive", "Non Predictive", NA))
 
 
