@@ -33,11 +33,11 @@ data <- combine_eyes(HCL)
 head(data) # participant 118
 
 ## -----------------------------------------------------------------------------
-data <- interpolate(data, maxgap = 25, method = "approx", participant_ID = "pNum")
+data <- interpolate(data, maxgap = 150, method = "approx", participant_ID = "pNum")
 
 ## -----------------------------------------------------------------------------
 
-interpolate_report <- interpolate(data, maxgap = 25, method = "approx", participant_ID = "pNum", report = TRUE)
+interpolate_report <- interpolate(data, maxgap = 150, method = "approx", participant_ID = "pNum", report = TRUE)
 
 interpolate_report[[2]]
 
@@ -79,7 +79,6 @@ data <- conditional_transform(data,
 data_fixations_disp <- fixation_dispersion(data,
                                            min_dur = 150, # Minimum duration (in milliseconds) of period over which fixations are assessed
                                            disp_tol = 100, # Maximum tolerance (in pixels) for the dispersion of values allowed over fixation period
-                                           run_interp = FALSE, # the default is true, but we have already run interpolate()
                                            NA_tol = 0.25, # the proportion of NAs tolerated within any window of samples evaluated as a fixation
                                            progress = FALSE, # whether to display a progress bar or not
                                            participant_ID = "pNum") 
@@ -89,12 +88,11 @@ head(data_fixations_disp) # show sample of output data
 
 ## -----------------------------------------------------------------------------
 
-data_fixations_VTI <- fixation_VTI(data,
+data_fixations_VTI <- fixation_VTI(data[data$pNum == 119,],
                                    threshold = 80, #smoothed data, so use a lower threshold
                                    min_dur = 150, # Minimum duration (in milliseconds) of period over which fixations are assessed
                                    min_dur_sac = 20, # Minimum duration (in milliseconds) for saccades to be determined
                                    disp_tol = 100, # Maximum tolerance (in pixels) for the dispersion of values allowed over fixation period
-                                   run_interp = TRUE,
                                    smooth = FALSE,
                                    progress = FALSE, # whether to display a progress bar or not, when running multiple participants 
                                    participant_ID = "pNum")
@@ -111,9 +109,9 @@ head(saccades)
 
 ## -----------------------------------------------------------------------------
 #some functions are best with single-participant data
-data_118 <- data[data$pNum == 118,]
+data_119 <- data[data$pNum == 119,]
 
-comparison <- compare_algorithms(data_118,
+comparison <- compare_algorithms(data_119,
                                  plot_fixations = TRUE,
                                  print_summary = TRUE,
                                  sample_rate = NULL,
@@ -122,7 +120,6 @@ comparison <- compare_algorithms(data_118,
                                  min_dur_sac = 20,
                                  disp_tol = 100,
                                  NA_tol = 0.25,
-                                 run_interp = TRUE,
                                  smooth = FALSE)
 
 ## -----------------------------------------------------------------------------
@@ -143,7 +140,7 @@ data_AOI_time <- AOI_time(data = data_fixations_disp,
                           AOIs = AOI_areas,
                           participant_ID = "pNum")
 
-head(data_AOI_time)
+head(data_AOI_time, 10)
 
 ## -----------------------------------------------------------------------------
 AOI_time(data = data_fixations_disp,
@@ -154,18 +151,19 @@ AOI_time(data = data_fixations_disp,
                           trial_time = HCL_behavioural$RT) #vector of trial times
 
 ## -----------------------------------------------------------------------------
-AOI_time(data = data_118, data_type = "raw", AOIs = AOI_areas,
+AOI_time(data = data_119, data_type = "raw", AOIs = AOI_areas,
          participant_ID = "pNum")
 
 ## -----------------------------------------------------------------------------
 
-AOI_time_binned(data = data_118,
+binned_time <- AOI_time_binned(data = data_119,
          AOIs = AOI_areas,
          participant_ID = "pNum", 
          bin_length = 100,
          max_time = 2000,
          as_prop = TRUE)
 
+head(binned_time)
 
 ## -----------------------------------------------------------------------------
 
@@ -178,43 +176,43 @@ head(data_AOI_sequence)
 
 ## -----------------------------------------------------------------------------
 
-plot_seq(data_118, trial_number = 1)
+plot_seq(data_119, trial_number = 1)
 
 
 ## -----------------------------------------------------------------------------
 
-plot_seq(data_118, trial_number = 1, bg_image = "data/HCL_sample_image.jpg") # add background image
+plot_seq(data_119, trial_number = 1, bg_image = "data/HCL_sample_image.jpg") # add background image
 
-plot_seq(data_118, trial_number = 1, AOIs = AOI_areas) # add AOIs
-
-
-## -----------------------------------------------------------------------------
-plot_seq(data_118, trial_number = 1, AOIs = AOI_areas, bin_time = 1000)
+plot_seq(data_119, trial_number = 1, AOIs = AOI_areas) # add AOIs
 
 
 ## -----------------------------------------------------------------------------
-plot_spatial(raw_data = data_118, trial_number = 6)
-
-plot_spatial(fix_data = fixation_dispersion(data_118), trial_number = 6)
-
-plot_spatial(sac_data = saccade_VTI(data_118), trial_number = 6)
+plot_seq(data_119, trial_number = 1, AOIs = AOI_areas, bin_time = 1000)
 
 
 ## -----------------------------------------------------------------------------
-plot_spatial(raw_data = data_118,
-             fix_data = fixation_dispersion(data_118),
-             sac_data = saccade_VTI(data_118),
+plot_spatial(raw_data = data_119, trial_number = 6)
+
+plot_spatial(fix_data = fixation_dispersion(data_119), trial_number = 6)
+
+plot_spatial(sac_data = saccade_VTI(data_119), trial_number = 6)
+
+
+## -----------------------------------------------------------------------------
+plot_spatial(raw_data = data_119,
+             fix_data = fixation_dispersion(data_119),
+             sac_data = saccade_VTI(data_119),
              trial_number = 6)
 
 
 ## -----------------------------------------------------------------------------
 #standard plot with absolute time
-plot_AOI_growth(data = data_118, AOIs = AOI_areas, type = "abs", trial_number = 1)
+plot_AOI_growth(data = data_119, AOIs = AOI_areas, type = "abs", trial_number = 1)
 
 #standard plot with proportional time
-plot_AOI_growth(data = data_118, AOIs = AOI_areas, type = "prop", trial_number = 1)
+plot_AOI_growth(data = data_119, AOIs = AOI_areas, type = "prop", trial_number = 1)
 
 #only keep predictive and non-predictive cues rather than the target AOI
-plot_AOI_growth(data = data_118, AOIs = AOI_areas, type = "prop", AOI_names = c("Predictive", "Non Predictive", NA))
+plot_AOI_growth(data = data_119, AOIs = AOI_areas, type = "prop", AOI_names = c("Predictive", "Non Predictive", NA))
 
 

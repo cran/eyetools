@@ -1,7 +1,7 @@
 Type: Package
 Package: eyetools
 Title: Analyse Eye Data
-Version: 0.8.0
+Version: 0.8.1
 Authors@R: c(
     person("Tom", "Beesley", , "t.beesley@lancaster.ac.uk", role = c("aut", "cre")),
     person("Matthew", "Ivory", , "matthew.ivory@lancaster.ac.uk", role = "aut")
@@ -21,7 +21,7 @@ URL: https://tombeesley.github.io/eyetools/
 BugReports: https://github.com/tombeesley/eyetools/issues
 Depends: R (>= 2.10)
 Imports: ggforce, ggplot2, viridis, glue, hdf5r, lifecycle, magick,
-        pbapply, rdist, rlang, stats, utils, zoo
+        pbapply, rlang, stats, utils, zoo
 Suggests: knitr, rmarkdown, testthat (>= 3.0.0),
 VignetteBuilder: knitr
 Config/testthat/edition: 3
@@ -30,9 +30,9 @@ LazyData: true
 RoxygenNote: 7.3.2
 Language: en-GB
 NeedsCompilation: no
-Packaged: 2024-12-17 15:58:17 UTC; ivorym
+Packaged: 2024-12-19 15:30:07 UTC; ivorym
 Author: Tom Beesley [aut, cre],
   Matthew Ivory [aut]
 Maintainer: Tom Beesley <t.beesley@lancaster.ac.uk>
 Repository: CRAN
-Date/Publication: 2024-12-18 08:00:02 UTC
+Date/Publication: 2024-12-19 17:10:02 UTC
